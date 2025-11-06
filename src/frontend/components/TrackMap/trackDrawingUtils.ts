@@ -10,7 +10,7 @@ export const setupCanvasContext = (
   ctx.save();
   ctx.translate(offsetX, offsetY);
   ctx.scale(scale, scale);
-  
+
   // Apply shadow
   ctx.shadowColor = 'black';
   ctx.shadowBlur = 2;
@@ -37,7 +37,10 @@ export const drawTrack = (
 
 export const drawStartFinishLine = (
   ctx: CanvasRenderingContext2D,
-  startFinishLine: { point: { x: number; y: number }; perpendicular: { x: number; y: number } } | null
+  startFinishLine: {
+    point: { x: number; y: number };
+    perpendicular: { x: number; y: number };
+  } | null
 ) => {
   if (!startFinishLine) return;
 
@@ -61,26 +64,70 @@ export const drawStartFinishLine = (
   ctx.stroke();
 };
 
+interface TurnLabelOptions {
+  showNumbers?: boolean;
+  showNames?: boolean;
+}
+
+// assuming here content with only numbers and a max length of 2 is a turn number
+const isTurnNumber = (value: string) =>
+  value.length <= 2 && /^\d+$/.test(value);
+
+const extractTurnNumber = (content?: string): string | undefined => {
+  const label = content?.trim();
+  if (!label) return undefined;
+
+  if (isTurnNumber(label)) return label;
+
+  return undefined;
+};
+
+const extractTurnName = (content?: string): string | undefined => {
+  const label = content?.trim();
+  if (!label || isTurnNumber(label)) return undefined;
+
+  return label;
+};
+
 export const drawTurnNames = (
   ctx: CanvasRenderingContext2D,
   turns: TrackDrawing['turns'],
-  enableTurnNames: boolean | undefined
+  options?: TurnLabelOptions
 ) => {
-  if (!enableTurnNames || !turns) return;
+  if (!turns) return;
+
+  const showNumbers = options?.showNumbers ?? false;
+  const showNames = options?.showNames ?? false;
+
+  if (!showNumbers && !showNames) return;
 
   turns.forEach((turn) => {
-    if (!turn.content || !turn.x || !turn.y) return;
+    if (!turn || turn.x == null || turn.y == null) return;
+
+    const matchedNumber = extractTurnNumber(turn.content);
+    const matchedName = extractTurnName(turn.content);
+
+    const label =
+      (showNumbers && matchedNumber) ||
+      (showNames && matchedName) ||
+      undefined;
+
+    if (!label) return;
+
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = 'white';
     ctx.font = '2rem sans-serif';
-    ctx.fillText(turn.content, turn.x, turn.y);
+    ctx.fillText(label, turn.x, turn.y);
   });
 };
 
 export const drawDrivers = (
   ctx: CanvasRenderingContext2D,
-  calculatePositions: Record<number, TrackDriver & { position: { x: number; y: number } }>,
+  calculatePositions: Record<
+    number,
+    TrackDriver & { position: { x: number; y: number } }
+  >,
   driverColors: Record<number, { fill: string; text: string }>
 ) => {
   Object.values(calculatePositions)
@@ -99,4 +146,4 @@ export const drawDrivers = (
       ctx.font = '2rem sans-serif';
       ctx.fillText(driver.CarNumber, position.x, position.y);
     });
-}; 
+};

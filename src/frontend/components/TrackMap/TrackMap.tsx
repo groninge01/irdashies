@@ -16,7 +16,8 @@ export const TrackMap = () => {
     <TrackCanvas
       trackId={trackId}
       drivers={driversTrackData}
-      enableTurnNames={settings?.enableTurnNames ?? false}
+      showTurnNumbers={settings?.showTurnNumbers ?? false}
+      showTurnNames={settings?.showTurnNames ?? false}
       debug={debug}
     />
   );

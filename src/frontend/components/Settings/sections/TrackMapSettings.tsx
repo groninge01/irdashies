@@ -8,12 +8,14 @@ const SETTING_ID = 'map';
 interface TrackMapSettings {
   enabled: boolean;
   config: {
-    enableTurnNames: boolean;
+    showTurnNumbers: boolean;
+    showTurnNames: boolean;
   };
 }
 
 const defaultConfig: TrackMapSettings['config'] = {
-  enableTurnNames: false
+  showTurnNumbers: false,
+  showTurnNames: false,
 };
 
 export const TrackMapSettings = () => {
@@ -42,16 +44,34 @@ export const TrackMapSettings = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-sm text-slate-300">Enable Turn Names</span>
+              <span className="text-sm text-slate-300">Show Turn Numbers</span>
               <p className="text-xs text-slate-400">
-                Show turn numbers and names on the track map
+                Display the numeric label for each turn on the map
               </p>
             </div>
             <ToggleSwitch
-              enabled={settings.config.enableTurnNames}
-              onToggle={(enabled) => handleConfigChange({
-                enableTurnNames: enabled
-              })}
+              enabled={settings.config.showTurnNumbers}
+              onToggle={(enabled) =>
+                handleConfigChange({
+                  showTurnNumbers: enabled,
+                })
+              }
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-sm text-slate-300">Show Turn Names</span>
+              <p className="text-xs text-slate-400">
+                Display the descriptive name for each turn on the map
+              </p>
+            </div>
+            <ToggleSwitch
+              enabled={settings.config.showTurnNames}
+              onToggle={(enabled) =>
+                handleConfigChange({
+                  showTurnNames: enabled,
+                })
+              }
             />
           </div>
         </div>

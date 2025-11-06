@@ -43,7 +43,8 @@ export interface WeatherWidgetSettings extends BaseWidgetSettings {
 
 export interface TrackMapWidgetSettings extends BaseWidgetSettings {
   config: {
-    enableTurnNames: boolean;
+    showTurnNumbers: boolean;
+    showTurnNames: boolean;
   };
 }
 

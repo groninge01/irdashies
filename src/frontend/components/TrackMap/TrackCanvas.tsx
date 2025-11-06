@@ -16,7 +16,8 @@ import {
 export interface TrackProps {
   trackId: number;
   drivers: TrackDriver[];
-  enableTurnNames?: boolean;
+  showTurnNumbers?: boolean;
+  showTurnNames?: boolean;
   debug?: boolean;
 }
 
@@ -43,6 +44,8 @@ export interface TrackDrawing {
     x?: number;
     y?: number;
     content?: string;
+    number?: string;
+    name?: string;
   }[];
 }
 
@@ -52,7 +55,8 @@ const TRACK_DRAWING_HEIGHT = 1080;
 export const TrackCanvas = ({
   trackId,
   drivers,
-  enableTurnNames,
+  showTurnNumbers,
+  showTurnNames,
   debug,
 }: TrackProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -222,7 +226,10 @@ export const TrackCanvas = ({
     // Draw all elements
     drawTrack(ctx, path2DObjects);
     drawStartFinishLine(ctx, startFinishLine);
-    drawTurnNames(ctx, trackDrawing.turns, enableTurnNames);
+    drawTurnNames(ctx, trackDrawing.turns, {
+      showNumbers: showTurnNumbers,
+      showNames: showTurnNames,
+    });
     drawDrivers(ctx, calculatePositions, driverColors);
 
     // Restore context state
@@ -233,7 +240,8 @@ export const TrackCanvas = ({
     trackDrawing?.turns,
     driverColors,
     canvasSize,
-    enableTurnNames,
+    showTurnNumbers,
+    showTurnNames,
     trackDrawing?.startFinish?.point,
     trackDrawing?.active?.trackPathPoints,
     startFinishLine,

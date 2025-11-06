@@ -3,7 +3,8 @@ import { useDashboard } from '@irdashies/context';
 interface TrackMapSettings {
   enabled: boolean;
   config: {
-    enableTurnNames: boolean;
+    showTurnNumbers: boolean;
+    showTurnNames: boolean;
   };
 }
 
@@ -18,8 +19,10 @@ export const useTrackMapSettings = () => {
   if (
     settings &&
     typeof settings === 'object' &&
-    'enableTurnNames' in settings &&
-    typeof settings.enableTurnNames === 'boolean'
+    'showTurnNumbers' in settings &&
+    typeof settings.showTurnNumbers === 'boolean' &&
+    'showTurnNames' in settings &&
+    typeof settings.showTurnNames === 'boolean'
   ) {
     return settings as TrackMapSettings['config'];
   }
