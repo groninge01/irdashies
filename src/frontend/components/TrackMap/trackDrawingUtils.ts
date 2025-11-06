@@ -101,6 +101,11 @@ export const drawTurnNames = (
 
   if (!showNumbers && !showNames) return;
 
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'white';
+  ctx.font = '2rem sans-serif';
+
   turns.forEach((turn) => {
     if (!turn || turn.x == null || turn.y == null) return;
 
@@ -108,16 +113,10 @@ export const drawTurnNames = (
     const matchedName = extractTurnName(turn.content);
 
     const label =
-      (showNumbers && matchedNumber) ||
-      (showNames && matchedName) ||
-      undefined;
+      (showNumbers && matchedNumber) || (showNames && matchedName) || undefined;
 
     if (!label) return;
 
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'white';
-    ctx.font = '2rem sans-serif';
     ctx.fillText(label, turn.x, turn.y);
   });
 };
