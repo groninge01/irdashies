@@ -4,8 +4,11 @@ import type {
   SessionInfo as SdkSessionInfo,
   Driver as SdkDriver,
 } from '../app/irsdk/types';
+import { CarLeftRight } from '../app/irsdk/types/enums';
 
 export type Session = SessionData;
 export type SessionInfo = SdkSessionInfo;
 export type SessionResults = SessionResultsPosition;
 export type Driver = SdkDriver;
+
+export { CarLeftRight };
