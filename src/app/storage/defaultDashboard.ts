@@ -150,6 +150,17 @@ export const defaultDashboard: DashboardLayout = {
       "config": {
         "distanceThreshold": -0.3
       }
+    },
+    {
+      "id": "radar",
+      "enabled": false,
+      "layout": {
+        "x": 1330,
+        "y": 60,
+        "width": 200,
+        "height": 120
+      },
+      "config": {}
     }
   ],
   "generalSettings": {

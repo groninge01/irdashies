@@ -4,6 +4,7 @@ import { StandingsSettings } from './sections/StandingsSettings';
 import { RelativeSettings } from './sections/RelativeSettings';
 import { WeatherSettings } from './sections/WeatherSettings';
 import { TrackMapSettings } from './sections/TrackMapSettings';
+import { RadarSettings } from './sections/RadarSettings';
 import { AdvancedSettings } from './sections/AdvancedSettings';
 import { InputSettings } from './sections/InputSettings';
 import { AboutSettings } from './sections/AboutSettings';
@@ -116,6 +117,11 @@ export const SettingsLayout = () => {
               </Link>
             </li>
             <li>
+              <Link to="/settings/radar" className={menuItemClass('/radar')}>
+                Radar
+              </Link>
+            </li>
+            <li>
               <Link
                 to="/settings/faster-cars"
                 className={menuItemClass('/faster-cars')}
@@ -156,6 +162,7 @@ export const SettingsLayout = () => {
             <Route path="standings" element={<StandingsSettings />} />
             <Route path="relative" element={<RelativeSettings />} />
             <Route path="weather" element={<WeatherSettings />} />
+            <Route path="radar" element={<RadarSettings />} />
             <Route path="map" element={<TrackMapSettings />} />
             <Route path="input" element={<InputSettings />} />
             <Route path="faster-cars" element={<FasterCarsFromBehindSettings />} />
