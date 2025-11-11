@@ -1,11 +1,11 @@
-import {
-  SpeakerHighIcon,
-} from '@phosphor-icons/react';
+import { memo, useMemo } from 'react';
+import { SpeakerHighIcon } from '@phosphor-icons/react';
 import { getTailwindStyle } from '@irdashies/utils/colors';
 import { formatTime } from '@irdashies/utils/time';
 import { CountryFlag } from '../CountryFlag/CountryFlag';
 import type { LastTimeState } from '../../createStandings';
 import { Compound } from '../Compound/Compound';
+import { CarManufacturer } from '../CarManufacturer/CarManufacturer';
 
 interface DriverRowInfoProps {
   carIdx: number;
@@ -29,9 +29,12 @@ interface DriverRowInfoProps {
   hidden?: boolean;
   flairId?: number;
   tireCompound?: number;
+  carId?: number;
+  lapTimeDeltas?: number[];
+  numLapDeltasToShow?: number;
 }
 
-export const DriverInfoRow = ({
+export const DriverInfoRow = memo(({
   carIdx,
   carNumber,
   classColor,
@@ -52,11 +55,14 @@ export const DriverInfoRow = ({
   iratingChange,
   hidden,
   flairId,
-  tireCompound
+  tireCompound,
+  carId,
+  lapTimeDeltas,
+  numLapDeltasToShow
 }: DriverRowInfoProps) => {
-  // convert seconds to mm:ss:ms
-  const lastTimeString = formatTime(lastTime);
-  const fastestTimeString = formatTime(fastestTime);
+  // Memoize formatted time strings to avoid recalculation on every render
+  const lastTimeString = useMemo(() => formatTime(lastTime), [lastTime]);
+  const fastestTimeString = useMemo(() => formatTime(fastestTime), [fastestTime]);
 
   const getLastTimeColorClass = (state?: LastTimeState): string => {
     if (state === 'session-fastest') return 'text-purple-400';
@@ -81,21 +87,25 @@ export const DriverInfoRow = ({
       >
         {position}
       </td>
-      <td 
+      <td
         className={[
           getTailwindStyle(classColor).driverIcon,
           'border-l-4',
-          carNumber ? 'text-white text-right px-1 w-10' : 'w-0'
+          carNumber ? 'text-white text-right px-1 w-10' : 'w-0',
         ].join(' ')}
       >
         {carNumber && `#${carNumber}`}
       </td>
-      <td
-        className="px-2 py-0.5 w-full max-w-0 overflow-hidden"
-      >
+      <td className="px-2 py-0.5 w-full max-w-0 overflow-hidden">
         <div className="flex justify-between align-center items-center">
           <div className="flex-1 flex items-center overflow-hidden">
-            {flairId && <CountryFlag flairId={flairId} size="sm" className="mr-2 shrink-0" />}
+            {flairId && (
+              <CountryFlag
+                flairId={flairId}
+                size="sm"
+                className="mr-2 shrink-0"
+              />
+            )}
             <span
               className={`animate-pulse transition-[width] duration-300 ${radioActive ? 'w-4 mr-1' : 'w-0 overflow-hidden'}`}
             >
@@ -112,15 +122,19 @@ export const DriverInfoRow = ({
           )}
         </div>
       </td>
-      {badge && <td>{badge}</td>}
-      {iratingChange && (
-        <td className="px-2 text-left">
-          {iratingChange}
+      {carId && (
+        <td>
+          <div className="flex items-center pr-2">
+            <CarManufacturer
+              carId={carId}
+              size="sm"
+            />
+          </div>
         </td>
       )}
-      {delta !== undefined && (
-        <td className="px-2">{delta.toFixed(1)}</td>
-      )}
+      {badge && <td>{badge}</td>}
+      {iratingChange && <td className="px-2 text-left">{iratingChange}</td>}
+      {delta !== undefined && <td className="px-2">{delta.toFixed(1)}</td>}
       {fastestTime !== undefined && (
         <td className={`px-2 ${hasFastestTime ? 'text-purple-400' : ''}`}>
           {fastestTimeString}
@@ -131,13 +145,37 @@ export const DriverInfoRow = ({
           {lastTimeString}
         </td>
       )}
-     {tireCompound !== undefined && (
+      {tireCompound !== undefined && carId && (
         <td>
-          <div className="flex items-center pr-1"> 
-           <Compound tireCompound={tireCompound} size="sm" />
+          <div className="flex items-center pr-1">
+            <Compound tireCompound={tireCompound} carId={carId} size="sm" />
           </div>
         </td>
+      )}
+     {lapTimeDeltas !== undefined && (
+       <>
+         {lapTimeDeltas.map((deltaValue, index) => (
+           <td
+             key={index}
+             className={[
+               'px-1 text-center',
+               deltaValue > 0 ? 'text-green-400' : 'text-red-400'
+             ].join(' ')}
+           >
+             {deltaValue > 0 ? '+' : ''}{deltaValue.toFixed(1)}
+           </td>
+         ))}
+       </>
+     )}
+     {lapTimeDeltas === undefined && isPlayer && numLapDeltasToShow && (
+       <>
+         {[...Array(numLapDeltasToShow)].map((_, index) => (
+           <td key={index} className="px-1 text-center">-</td>
+         ))}
+       </>
      )}
     </tr>
   );
-};
+});
+
+DriverInfoRow.displayName = 'DriverInfoRow';

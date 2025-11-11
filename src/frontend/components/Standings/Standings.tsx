@@ -11,11 +11,16 @@ import {
   useDriverStandings,
   useStandingsSettings,
 } from './hooks';
+import { useLapTimesStoreUpdater } from '../../context/LapTimesStore/LapTimesStoreUpdater';
 
 export const Standings = () => {
   const [parent] = useAutoAnimate();
   const settings = useStandingsSettings();
-  const standings = useDriverStandings(settings?.driverStandings);
+
+  // Update lap times store with telemetry data (only for this overlay)
+  useLapTimesStoreUpdater();
+
+  const standings = useDriverStandings(settings);
   const classStats = useCarClassStats();
   return (
     <div
@@ -68,6 +73,7 @@ export const Standings = () => {
                   radioActive={result.radioActive}
                   flairId={settings?.countryFlags?.enabled ?? true ? result.driver?.flairId : undefined}
                   tireCompound={settings?.compound?.enabled ?? true ? result.tireCompound : undefined}
+                  carId={settings?.carManufacturer?.enabled ?? true ? result.carId : undefined}
                   badge={
                     settings?.badge?.enabled ? (
                       <DriverRatingBadge
@@ -76,6 +82,8 @@ export const Standings = () => {
                       />
                     ) : undefined
                   }
+                  lapTimeDeltas={settings?.lapTimeDeltas?.enabled ? result.lapTimeDeltas : undefined}
+                  numLapDeltasToShow={settings?.lapTimeDeltas?.enabled ? settings.lapTimeDeltas.numLaps : undefined}
                 />
               ))}
             </Fragment>
