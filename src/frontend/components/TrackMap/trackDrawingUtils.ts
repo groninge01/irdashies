@@ -25,13 +25,13 @@ export const drawTrack = (
   if (!path2DObjects.inside) return;
 
   // Draw black outline first
-  ctx.strokeStyle = 'black';
-  ctx.lineWidth = 40;
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = 20;
   ctx.stroke(path2DObjects.inside);
 
   // Draw white track on top
-  ctx.strokeStyle = 'white';
-  ctx.lineWidth = 20;
+  ctx.strokeStyle = 'black';
+  ctx.lineWidth = 5;
   ctx.stroke(path2DObjects.inside);
 };
 
@@ -104,7 +104,7 @@ export const drawTurnNames = (
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = 'white';
-  ctx.font = '2rem sans-serif';
+  ctx.font = '2.5rem sans-serif';
 
   turns.forEach((turn) => {
     if (!turn || turn.x == null || turn.y == null) return;
@@ -137,12 +137,12 @@ export const drawDrivers = (
 
       ctx.fillStyle = color.fill;
       ctx.beginPath();
-      ctx.arc(position.x, position.y, 40, 0, 2 * Math.PI);
+      ctx.arc(position.x, position.y, 20, 0, 2 * Math.PI);
       ctx.fill();
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = color.text;
-      ctx.font = '2rem sans-serif';
+      ctx.font = '1.5rem sans-serif';
       ctx.fillText(driver.CarNumber, position.x, position.y);
     });
 };
