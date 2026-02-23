@@ -224,6 +224,14 @@ export const SettingsLayout = () => {
             </li>
             <li>
               <Link
+                to="/settings/minimap"
+                className={menuItemClass('/minimap')}
+              >
+                Mini Map
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/settings/weather"
                 className={menuItemClass('/weather')}
               >
@@ -286,6 +294,9 @@ const SettingsLoader = () => {
       (w) => w.id === 'fuel'
     );
     return <FuelSettings widgetId={hasFuelWidget ? 'fuel' : undefined} />;
+  }
+  if (widgetId === 'minimap') {
+    return <MiniMapSettings />;
   }
 
   // 3. Find specific widget instance
