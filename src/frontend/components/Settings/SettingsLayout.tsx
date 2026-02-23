@@ -18,6 +18,7 @@ import { RelativeSettings } from './sections/RelativeSettings';
 import { WeatherSettings } from './sections/WeatherSettings';
 import { TrackMapSettings } from './sections/TrackMapSettings';
 import { FlatTrackMapSettings } from './sections/FlatTrackMapSettings';
+import { MiniMapSettings } from './sections/MiniMapSettings';
 import { AdvancedSettings } from './sections/AdvancedSettings';
 import { InputSettings } from './sections/InputSettings';
 import { AboutSettings } from './sections/AboutSettings';
@@ -292,6 +293,8 @@ const SettingsLoader = () => {
       return <TrackMapSettings />;
     case 'flatmap':
       return <FlatTrackMapSettings />;
+    case 'minimap':
+      return <MiniMapSettings />;
     case 'input':
       return <InputSettings />;
     case 'pitlanehelper':

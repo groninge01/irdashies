@@ -2,6 +2,7 @@ export * from './StandingsSettings';
 export * from './RelativeSettings';
 export * from './WeatherSettings';
 export * from './TrackMapSettings';
+export * from './MiniMapSettings';
 export * from './FuelSettings';
 export * from './GarageCoverSettings';
 export * from './RejoinIndicatorSettings';

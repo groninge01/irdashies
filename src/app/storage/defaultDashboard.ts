@@ -537,6 +537,35 @@ export const defaultDashboard: DashboardLayout = {
       },
     },
     {
+      id: 'minimap',
+      enabled: false,
+      layout: {
+        x: 1102,
+        y: 41,
+        width: 240,
+        height: 240,
+      },
+      config: {
+        enableTurnNames: false,
+        showCarNumbers: true,
+        displayMode: 'carNumber',
+        invertTrackColors: false,
+        driverCircleSize: 40,
+        playerCircleSize: 40,
+        trackLineWidth: 20,
+        trackOutlineWidth: 40,
+        useHighlightColor: false,
+        showOnlyWhenOnTrack: false,
+        sessionVisibility: {
+          race: true,
+          loneQualify: true,
+          openQualify: true,
+          practice: true,
+          offlineTesting: true,
+        },
+      },
+    },
+    {
       id: 'weather',
       enabled: true,
       layout: {

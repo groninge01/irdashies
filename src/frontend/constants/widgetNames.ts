@@ -10,6 +10,7 @@ export const WIDGET_NAMES: Record<WidgetId, string> = {
   relative: 'Relative',
   map: 'Track Map',
   flatmap: 'Flat Track Map',
+  minimap: 'Mini Map',
   weather: 'Weather',
   fastercarsfrombehind: 'Faster Cars From Behind',
   fuel: 'Fuel Calculator',
