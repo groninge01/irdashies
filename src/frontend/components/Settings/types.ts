@@ -16,6 +16,7 @@ export interface SessionVisibilitySettings {
 export interface StandingsWidgetSettings extends BaseWidgetSettings {
   config: {
     iratingChange: { enabled: boolean };
+    positionChange: { enabled: boolean };
     badge: {
       enabled: boolean;
       badgeFormat:
@@ -77,6 +78,10 @@ export interface StandingsWidgetSettings extends BaseWidgetSettings {
       precipitation: { enabled: boolean };
       airTemperature: { enabled: boolean; unit: 'Metric' | 'Imperial' };
       trackTemperature: { enabled: boolean; unit: 'Metric' | 'Imperial' };
+      wind: {
+        enabled: boolean;
+        speedPosition: 'left' | 'right';
+      };
       displayOrder: string[];
     };
     footerBar: {
@@ -92,6 +97,10 @@ export interface StandingsWidgetSettings extends BaseWidgetSettings {
       precipitation: { enabled: boolean };
       airTemperature: { enabled: boolean; unit: 'Metric' | 'Imperial' };
       trackTemperature: { enabled: boolean; unit: 'Metric' | 'Imperial' };
+      wind: {
+        enabled: boolean;
+        speedPosition: 'left' | 'right';
+      };
       displayOrder: string[];
     };
     showOnlyWhenOnTrack: boolean;
@@ -161,6 +170,10 @@ export interface RelativeWidgetSettings extends BaseWidgetSettings {
       precipitation: { enabled: boolean };
       airTemperature: { enabled: boolean; unit: 'Metric' | 'Imperial' };
       trackTemperature: { enabled: boolean; unit: 'Metric' | 'Imperial' };
+      wind: {
+        enabled: boolean;
+        speedPosition: 'left' | 'right';
+      };
       displayOrder: string[];
     };
     footerBar: {
@@ -176,6 +189,10 @@ export interface RelativeWidgetSettings extends BaseWidgetSettings {
       precipitation: { enabled: boolean };
       airTemperature: { enabled: boolean; unit: 'Metric' | 'Imperial' };
       trackTemperature: { enabled: boolean; unit: 'Metric' | 'Imperial' };
+      wind: {
+        enabled: boolean;
+        speedPosition: 'left' | 'right';
+      };
       displayOrder: string[];
     };
     showOnlyWhenOnTrack: boolean;
@@ -252,10 +269,12 @@ export interface TrackMapWidgetSettings extends BaseWidgetSettings {
   config: {
     enableTurnNames: boolean;
     showCarNumbers: boolean;
-    displayMode: 'carNumber' | 'sessionPosition';
+    displayMode: 'carNumber' | 'sessionPosition' | 'livePosition';
     invertTrackColors: boolean;
+    highContrastTurns: boolean;
     driverCircleSize: number;
     playerCircleSize: number;
+    trackmapFontSize: number;
     trackLineWidth: number;
     trackOutlineWidth: number;
     useHighlightColor: boolean;
@@ -481,9 +500,10 @@ export interface FlagWidgetSettings extends BaseWidgetSettings {
 export interface FlatTrackMapWidgetSettings extends BaseWidgetSettings {
   config: {
     showCarNumbers: boolean;
-    displayMode: 'carNumber' | 'sessionPosition';
+    displayMode: 'carNumber' | 'sessionPosition' | 'livePosition';
     driverCircleSize: number;
     playerCircleSize: number;
+    trackmapFontSize: number;
     trackLineWidth: number;
     trackOutlineWidth: number;
     invertTrackColors: boolean;
@@ -536,6 +556,7 @@ export interface PitlaneHelperWidgetSettings extends BaseWidgetSettings {
     showPitlaneTraffic: boolean;
     background: { opacity: number };
     progressBarOrientation: 'horizontal' | 'vertical';
+    showSpeedBar: boolean;
     showPitExitInputs: boolean;
     pitExitInputs: {
       throttle: boolean;

@@ -12,8 +12,10 @@ const defaultConfig: TrackMapWidgetSettings['config'] = {
   showCarNumbers: true,
   displayMode: 'carNumber',
   invertTrackColors: false,
+  highContrastTurns: false,
   driverCircleSize: 40,
   playerCircleSize: 40,
+  trackmapFontSize: 100,
   trackLineWidth: 20,
   trackOutlineWidth: 40,
   useHighlightColor: false,
@@ -28,10 +30,12 @@ const migrateConfig = (savedConfig: unknown): TrackMapWidgetSettings['config'] =
   return {
     enableTurnNames: (config.enableTurnNames as boolean) ?? defaultConfig.enableTurnNames,
     showCarNumbers: (config.showCarNumbers as boolean) ?? defaultConfig.showCarNumbers,
-    displayMode: (config.displayMode as 'carNumber' | 'sessionPosition') ?? defaultConfig.displayMode,
+    displayMode: (config.displayMode as 'carNumber' | 'sessionPosition' | 'livePosition') ?? defaultConfig.displayMode,
     invertTrackColors: (config.invertTrackColors as boolean) ?? defaultConfig.invertTrackColors,
+    highContrastTurns: (config.highContrastTurns as boolean) ?? defaultConfig.highContrastTurns,
     driverCircleSize: (config.driverCircleSize as number) ?? defaultConfig.driverCircleSize,
     playerCircleSize: (config.playerCircleSize as number) ?? defaultConfig.playerCircleSize,
+    trackmapFontSize: (config.trackmapFontSize as number) ?? defaultConfig.trackmapFontSize,
     trackLineWidth: (config.trackLineWidth as number) ?? defaultConfig.trackLineWidth,
     trackOutlineWidth: (config.trackOutlineWidth as number) ?? defaultConfig.trackOutlineWidth,
     useHighlightColor: (config.useHighlightColor as boolean) ?? defaultConfig.useHighlightColor,
@@ -113,6 +117,15 @@ export const TrackMapSettings = () => {
               >
                 Session Position
               </button>
+              <button
+                onClick={() => handleConfigChange({ displayMode: 'livePosition' })}
+                className={`px-3 py-1 rounded text-sm transition-colors ${settings.config.displayMode === 'livePosition'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-slate-600 text-slate-300 hover:bg-slate-500'
+                  }`}
+              >
+                Live Position
+              </button>
             </div>
           </div>
 
@@ -156,6 +169,26 @@ export const TrackMapSettings = () => {
             </p>
           </div>
 
+          <div className="space-y-2">
+            <label className="text-slate-300">
+              Relative Font Size: {settings.config.trackmapFontSize ?? 100}%
+            </label>
+            <input
+              type="range"
+              min="50"
+              max="150"
+              step="1"
+              value={settings.config.trackmapFontSize ?? 100}
+              onChange={(e) =>
+                handleConfigChange({ trackmapFontSize: parseInt(e.target.value) || 100 })
+              }
+              className="w-full"
+            />
+            <p className="text-slate-400 text-sm">
+              Relative size of the font within the track map
+            </p>
+          </div>
+
           <div className="flex items-center justify-between">
             <div>
               <span className="text-sm text-slate-300">Use Highlight Color</span>
@@ -182,6 +215,21 @@ export const TrackMapSettings = () => {
               enabled={settings.config.invertTrackColors ?? false}
               onToggle={(enabled) => handleConfigChange({
                 invertTrackColors: enabled
+              })}
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-sm text-slate-300">High Contrast Turn Names</span>
+              <p className="text-xs text-slate-400">
+                Use black background for turn numbers and turn names for better legibility
+              </p>
+            </div>
+            <ToggleSwitch
+              enabled={settings.config.highContrastTurns ?? false}
+              onToggle={(enabled) => handleConfigChange({
+                highContrastTurns: enabled
               })}
             />
           </div>

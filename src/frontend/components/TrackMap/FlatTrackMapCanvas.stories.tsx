@@ -11,10 +11,12 @@ export default {
     showCarNumbers: true,
     driverCircleSize: 40,
     playerCircleSize: 40,
+    trackmapFontSize: 100,
     trackLineWidth: 20,
     trackOutlineWidth: 40,
     invertTrackColors: false,
     highlightColor: undefined,
+    driverLivePositions: [0, 0],
   },
   argTypes: {
     showCarNumbers: {
@@ -25,6 +27,9 @@ export default {
     },
     playerCircleSize: {
       control: { type: 'range', min: 10, max: 100, step: 1 },
+    },
+    trackmapFontSize: {
+      control: { type: 'range', min: 50, max: 150, step: 1 },
     },
     trackLineWidth: {
       control: { type: 'range', min: 5, max: 40, step: 1 },
@@ -327,10 +332,12 @@ export const Primary: Story = {
     showCarNumbers: true,
     driverCircleSize: 40,
     playerCircleSize: 40,
+    trackmapFontSize: 100,
     trackLineWidth: 20,
     trackOutlineWidth: 40,
     invertTrackColors: false,
     highlightColor: undefined,
+    driverLivePositions: [0, 0],
   },
 };
 
@@ -341,10 +348,12 @@ export const InvertedTrackColors: Story = {
     showCarNumbers: true,
     driverCircleSize: 40,
     playerCircleSize: 40,
+    trackmapFontSize: 100,
     trackLineWidth: 20,
     trackOutlineWidth: 40,
     invertTrackColors: true,
     highlightColor: undefined,
+    driverLivePositions: [0, 0],
   },
 };
 
@@ -355,10 +364,12 @@ export const SingleClass: Story = {
     showCarNumbers: true,
     driverCircleSize: 40,
     playerCircleSize: 40,
+    trackmapFontSize: 100,
     trackLineWidth: 20,
     trackOutlineWidth: 40,
     invertTrackColors: false,
     highlightColor: undefined,
+    driverLivePositions: [0, 0],
   },
 };
 
@@ -401,10 +412,12 @@ export const SingleDriver: Story = {
         showCarNumbers={args.showCarNumbers ?? true}
         driverCircleSize={args.driverCircleSize ?? 40}
         playerCircleSize={args.playerCircleSize ?? 40}
+        trackmapFontSize={args.trackmapFontSize ?? 100}
         trackLineWidth={args.trackLineWidth ?? 20}
         trackOutlineWidth={args.trackOutlineWidth ?? 40}
         invertTrackColors={args.invertTrackColors ?? false}
         highlightColor={args.highlightColor}
+        driverLivePositions={args.driverLivePositions}
       />
     );
   },
@@ -439,10 +452,12 @@ export const CirclingAround: Story = {
         showCarNumbers={args.showCarNumbers ?? true}
         driverCircleSize={args.driverCircleSize ?? 40}
         playerCircleSize={args.playerCircleSize ?? 40}
+        trackmapFontSize={args.trackmapFontSize ?? 100}
         trackLineWidth={args.trackLineWidth ?? 20}
         trackOutlineWidth={args.trackOutlineWidth ?? 40}
         invertTrackColors={args.invertTrackColors ?? false}
         highlightColor={args.highlightColor}
+        driverLivePositions={args.driverLivePositions}
       />
     );
   },

@@ -6,6 +6,7 @@ import { FlatTrackMapCanvas } from './FlatTrackMapCanvas';
 import tracks from './tracks/tracks.json';
 import { TrackDrawing } from './TrackCanvas';
 import { useSessionVisibility, useTelemetryValue } from '@irdashies/context';
+import { useDriverLivePositions } from '../Standings/hooks/useDriverLivePositions';
 
 const debug = import.meta.env.DEV || import.meta.env.MODE === 'storybook';
 
@@ -15,6 +16,9 @@ export const FlatTrackMap = () => {
   const settings = useFlatTrackMapSettings();
   const highlightColor = useHighlightColor();
   const isOnTrack = useTelemetryValue('IsOnTrack');
+  const driverLivePositions = useDriverLivePositions({
+    enabled: (settings?.displayMode ?? 'carNumber') === 'livePosition',
+  });
 
   if (!useSessionVisibility(settings?.sessionVisibility)) return <></>;
 
@@ -43,9 +47,11 @@ export const FlatTrackMap = () => {
         displayMode={settings?.displayMode ?? 'carNumber'}
         driverCircleSize={settings?.driverCircleSize ?? 40}
         playerCircleSize={settings?.playerCircleSize ?? 40}
+        trackmapFontSize={settings?.trackmapFontSize ?? 100}
         trackLineWidth={settings?.trackLineWidth ?? 20}
         trackOutlineWidth={settings?.trackOutlineWidth ?? 40}
         invertTrackColors={settings?.invertTrackColors ?? false}
+        driverLivePositions={driverLivePositions}
       />
     </div>
   );
