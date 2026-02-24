@@ -77,7 +77,7 @@ export const MiniMapSvg = ({
   carAnchorY = 0.93,
   headingSampleDistanceMeters = 45,
   minHeadingDeltaDegrees = 1.0,
-  tiltAmount = 0.9,
+  tiltAmount = 0.97,
 }: MiniMapSvgProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -180,7 +180,7 @@ export const MiniMapSvg = ({
     const trackPathPoints = trackDrawing.active.trackPathPoints;
     const travelSign =
       trackDrawing.startFinish.direction === 'anticlockwise' ? 1 : -1;
-    const clampedTilt = Math.min(0.92, Math.max(0, tiltAmount));
+    const clampedTilt = Math.min(1.35, Math.max(0, tiltAmount));
     const effectiveForwardDistance = Math.max(1, forwardDistanceMeters);
     const effectiveBackwardDistance = Math.max(0, backwardDistanceMeters);
     const effectiveLateralFov = Math.max(1, lateralFovMeters);
@@ -302,6 +302,7 @@ export const MiniMapSvg = ({
 
   const outlineColor = invertTrackColors ? '#e5e7eb' : '#111827';
   const trackColor = invertTrackColors ? '#111827' : '#6b7280';
+  const trackLineOpacity = 0.5;
   const miniMapTrackLineWidth = Math.max(2, trackLineWidth * 0.2);
   const miniMapTrackOutlineWidth = Math.max(
     miniMapTrackLineWidth + 1,
@@ -344,6 +345,7 @@ export const MiniMapSvg = ({
             d={geometry.trackPathD}
             fill="none"
             stroke={trackColor}
+            strokeOpacity={trackLineOpacity}
             strokeWidth={miniMapTrackLineWidth}
             strokeLinecap="butt"
             strokeLinejoin="round"

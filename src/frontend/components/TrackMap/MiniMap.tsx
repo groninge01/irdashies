@@ -71,7 +71,7 @@ export const MiniMap = (config?: MiniMapConfig) => {
         rotationSmoothing={config?.rotationSmoothing ?? 0.08}
         scaleSmoothing={config?.scaleSmoothing ?? 0.18}
         minHeadingDeltaDegrees={config?.minHeadingDeltaDegrees ?? 1.0}
-        tiltAmount={config?.tiltAmount ?? 0.9}
+        tiltAmount={config?.tiltAmount ?? 0.97}
       />
     </div>
   );

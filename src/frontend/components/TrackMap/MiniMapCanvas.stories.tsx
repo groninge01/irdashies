@@ -85,7 +85,7 @@ const meta = {
     rotationSmoothing: 0.08,
     scaleSmoothing: 0.18,
     minHeadingDeltaDegrees: 1.0,
-    tiltAmount: 0.9,
+    tiltAmount: 0.97,
   },
   argTypes: {
     showCarNumbers: { control: { type: 'boolean' } },
@@ -133,7 +133,7 @@ const meta = {
       description: 'Ignore tiny heading changes to reduce visible jitter.',
     },
     tiltAmount: {
-      control: { type: 'range', min: 0, max: 0.92, step: 0.01 },
+      control: { type: 'range', min: 0, max: 1.35, step: 0.01 },
       description:
         'Pseudo-3D perspective tilt (higher = stronger drive-nav effect).',
     },
@@ -161,7 +161,7 @@ const FovSizedPreview = (args: MiniMapStoryArgs, children: ReactNode) => {
   const width = Math.max(220, Math.min(maxWidth, widthFromHeight));
   const height = Math.max(180, Math.round(width / aspect));
   const padding = 12;
-  const tilt = Math.min(0.92, Math.max(0, args.tiltAmount ?? 0.9));
+  const tilt = Math.min(1.35, Math.max(0, args.tiltAmount ?? 0.97));
   const showTrapezoid = tilt > 0;
   const topInset = padding + (width * (0.06 + tilt * 0.08)) / 2;
   const bottomInset = padding;
@@ -272,6 +272,6 @@ export const CirclingAround: Story = {
     backwardDistanceMeters: 18,
     lateralFovMeters: 130,
     carAnchorY: 0.93,
-    tiltAmount: 0.9,
+    tiltAmount: 0.97,
   },
 };
