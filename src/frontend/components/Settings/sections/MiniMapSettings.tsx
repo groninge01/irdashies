@@ -12,40 +12,74 @@ const defaultConfig: TrackMapWidgetSettings['config'] = {
   showCarNumbers: true,
   displayMode: 'carNumber',
   invertTrackColors: false,
+  highContrastTurns: false,
   driverCircleSize: 40,
   playerCircleSize: 40,
+  trackmapFontSize: 100,
   trackLineWidth: 20,
   trackOutlineWidth: 40,
   useHighlightColor: false,
   showOnlyWhenOnTrack: false,
-  sessionVisibility: { race: true, loneQualify: true, openQualify: true, practice: true, offlineTesting: true }
+  sessionVisibility: {
+    race: true,
+    loneQualify: true,
+    openQualify: true,
+    practice: true,
+    offlineTesting: true,
+  },
 };
 
-const migrateConfig = (savedConfig: unknown): TrackMapWidgetSettings['config'] => {
+const migrateConfig = (
+  savedConfig: unknown
+): TrackMapWidgetSettings['config'] => {
   if (!savedConfig || typeof savedConfig !== 'object') return defaultConfig;
 
   const config = savedConfig as Record<string, unknown>;
   return {
-    enableTurnNames: (config.enableTurnNames as boolean) ?? defaultConfig.enableTurnNames,
-    showCarNumbers: (config.showCarNumbers as boolean) ?? defaultConfig.showCarNumbers,
-    displayMode: (config.displayMode as 'carNumber' | 'sessionPosition') ?? defaultConfig.displayMode,
-    invertTrackColors: (config.invertTrackColors as boolean) ?? defaultConfig.invertTrackColors,
-    driverCircleSize: (config.driverCircleSize as number) ?? defaultConfig.driverCircleSize,
-    playerCircleSize: (config.playerCircleSize as number) ?? defaultConfig.playerCircleSize,
-    trackLineWidth: (config.trackLineWidth as number) ?? defaultConfig.trackLineWidth,
-    trackOutlineWidth: (config.trackOutlineWidth as number) ?? defaultConfig.trackOutlineWidth,
-    useHighlightColor: (config.useHighlightColor as boolean) ?? defaultConfig.useHighlightColor,
-    showOnlyWhenOnTrack: (config.showOnlyWhenOnTrack as boolean) ?? defaultConfig.showOnlyWhenOnTrack,
-    sessionVisibility: (config.sessionVisibility as SessionVisibilitySettings) ?? defaultConfig.sessionVisibility,
+    enableTurnNames:
+      (config.enableTurnNames as boolean) ?? defaultConfig.enableTurnNames,
+    showCarNumbers:
+      (config.showCarNumbers as boolean) ?? defaultConfig.showCarNumbers,
+    displayMode:
+      (config.displayMode as
+        | 'carNumber'
+        | 'sessionPosition'
+        | 'livePosition') ?? defaultConfig.displayMode,
+    invertTrackColors:
+      (config.invertTrackColors as boolean) ?? defaultConfig.invertTrackColors,
+    highContrastTurns:
+      (config.highContrastTurns as boolean) ?? defaultConfig.highContrastTurns,
+    driverCircleSize:
+      (config.driverCircleSize as number) ?? defaultConfig.driverCircleSize,
+    playerCircleSize:
+      (config.playerCircleSize as number) ?? defaultConfig.playerCircleSize,
+    trackmapFontSize:
+      (config.trackmapFontSize as number) ?? defaultConfig.trackmapFontSize,
+    trackLineWidth:
+      (config.trackLineWidth as number) ?? defaultConfig.trackLineWidth,
+    trackOutlineWidth:
+      (config.trackOutlineWidth as number) ?? defaultConfig.trackOutlineWidth,
+    useHighlightColor:
+      (config.useHighlightColor as boolean) ?? defaultConfig.useHighlightColor,
+    showOnlyWhenOnTrack:
+      (config.showOnlyWhenOnTrack as boolean) ??
+      defaultConfig.showOnlyWhenOnTrack,
+    sessionVisibility:
+      (config.sessionVisibility as SessionVisibilitySettings) ??
+      defaultConfig.sessionVisibility,
   };
 };
 
 export const MiniMapSettings = () => {
   const { currentDashboard } = useDashboard();
-  const savedSettings = currentDashboard?.widgets.find(w => w.id === SETTING_ID) as TrackMapWidgetSettings | undefined;
+  const savedSettings = currentDashboard?.widgets.find(
+    (w) => w.id === SETTING_ID
+  ) as TrackMapWidgetSettings | undefined;
   const [settings, setSettings] = useState<TrackMapWidgetSettings>({
-    enabled: currentDashboard?.widgets.find(w => w.id === SETTING_ID)?.enabled ?? false,
-    config: migrateConfig(savedSettings?.config)
+    enabled:
+      currentDashboard?.widgets.find((w) => w.id === SETTING_ID)?.enabled ??
+      false,
+    config: migrateConfig(savedSettings?.config),
   });
 
   if (!currentDashboard) {
@@ -71,9 +105,11 @@ export const MiniMapSettings = () => {
             </div>
             <ToggleSwitch
               enabled={settings.config.enableTurnNames}
-              onToggle={(enabled) => handleConfigChange({
-                enableTurnNames: enabled
-              })}
+              onToggle={(enabled) =>
+                handleConfigChange({
+                  enableTurnNames: enabled,
+                })
+              }
             />
           </div>
 
@@ -86,9 +122,11 @@ export const MiniMapSettings = () => {
             </div>
             <ToggleSwitch
               enabled={settings.config.showCarNumbers ?? true}
-              onToggle={(enabled) => handleConfigChange({
-                showCarNumbers: enabled
-              })}
+              onToggle={(enabled) =>
+                handleConfigChange({
+                  showCarNumbers: enabled,
+                })
+              }
             />
           </div>
 
@@ -97,19 +135,23 @@ export const MiniMapSettings = () => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleConfigChange({ displayMode: 'carNumber' })}
-                className={`px-3 py-1 rounded text-sm transition-colors ${settings.config.displayMode === 'carNumber'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-slate-600 text-slate-300 hover:bg-slate-500'
-                  }`}
+                className={`px-3 py-1 rounded text-sm transition-colors ${
+                  settings.config.displayMode === 'carNumber'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-slate-600 text-slate-300 hover:bg-slate-500'
+                }`}
               >
                 Car Number
               </button>
               <button
-                onClick={() => handleConfigChange({ displayMode: 'sessionPosition' })}
-                className={`px-3 py-1 rounded text-sm transition-colors ${settings.config.displayMode === 'sessionPosition'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-slate-600 text-slate-300 hover:bg-slate-500'
-                  }`}
+                onClick={() =>
+                  handleConfigChange({ displayMode: 'sessionPosition' })
+                }
+                className={`px-3 py-1 rounded text-sm transition-colors ${
+                  settings.config.displayMode === 'sessionPosition'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-slate-600 text-slate-300 hover:bg-slate-500'
+                }`}
               >
                 Session Position
               </button>
@@ -127,7 +169,9 @@ export const MiniMapSettings = () => {
               step="1"
               value={settings.config.driverCircleSize ?? 40}
               onChange={(e) =>
-                handleConfigChange({ driverCircleSize: parseInt(e.target.value) || 40 })
+                handleConfigChange({
+                  driverCircleSize: parseInt(e.target.value) || 40,
+                })
               }
               className="w-full"
             />
@@ -147,7 +191,9 @@ export const MiniMapSettings = () => {
               step="1"
               value={settings.config.playerCircleSize ?? 40}
               onChange={(e) =>
-                handleConfigChange({ playerCircleSize: parseInt(e.target.value) || 40 })
+                handleConfigChange({
+                  playerCircleSize: parseInt(e.target.value) || 40,
+                })
               }
               className="w-full"
             />
@@ -158,31 +204,41 @@ export const MiniMapSettings = () => {
 
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-sm text-slate-300">Use Highlight Color</span>
+              <span className="text-sm text-slate-300">
+                Use Highlight Color
+              </span>
               <p className="text-xs text-slate-400">
-                Use the highlight color from general settings for the player&apos;s circle
+                Use the highlight color from general settings for the
+                player&apos;s circle
               </p>
             </div>
             <ToggleSwitch
               enabled={settings.config.useHighlightColor ?? false}
-              onToggle={(enabled) => handleConfigChange({
-                useHighlightColor: enabled
-              })}
+              onToggle={(enabled) =>
+                handleConfigChange({
+                  useHighlightColor: enabled,
+                })
+              }
             />
           </div>
 
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-sm text-slate-300">Invert Track Colors</span>
+              <span className="text-sm text-slate-300">
+                Invert Track Colors
+              </span>
               <p className="text-xs text-slate-400">
-                Use black track with white outline instead of white track with black outline
+                Use black track with white outline instead of white track with
+                black outline
               </p>
             </div>
             <ToggleSwitch
               enabled={settings.config.invertTrackColors ?? false}
-              onToggle={(enabled) => handleConfigChange({
-                invertTrackColors: enabled
-              })}
+              onToggle={(enabled) =>
+                handleConfigChange({
+                  invertTrackColors: enabled,
+                })
+              }
             />
           </div>
 
@@ -197,13 +253,13 @@ export const MiniMapSettings = () => {
               step="1"
               value={settings.config.trackLineWidth ?? 20}
               onChange={(e) =>
-                handleConfigChange({ trackLineWidth: parseInt(e.target.value) ?? 20 })
+                handleConfigChange({
+                  trackLineWidth: parseInt(e.target.value) ?? 20,
+                })
               }
               className="w-full"
             />
-            <p className="text-slate-400 text-sm">
-              Width of the track line
-            </p>
+            <p className="text-slate-400 text-sm">Width of the track line</p>
           </div>
 
           <div className="space-y-2">
@@ -217,7 +273,9 @@ export const MiniMapSettings = () => {
               step="1"
               value={settings.config.trackOutlineWidth ?? 40}
               onChange={(e) =>
-                handleConfigChange({ trackOutlineWidth: parseInt(e.target.value) ?? 40 })
+                handleConfigChange({
+                  trackOutlineWidth: parseInt(e.target.value) ?? 40,
+                })
               }
               className="w-full"
             />
@@ -228,23 +286,29 @@ export const MiniMapSettings = () => {
 
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-sm text-slate-300">Show Only When On Track</span>
+              <span className="text-sm text-slate-300">
+                Show Only When On Track
+              </span>
               <p className="text-xs text-slate-400">
                 Hide the mini map when not actively driving on track
               </p>
             </div>
             <ToggleSwitch
               enabled={settings.config.showOnlyWhenOnTrack ?? false}
-              onToggle={(enabled) => handleConfigChange({
-                showOnlyWhenOnTrack: enabled
-              })}
+              onToggle={(enabled) =>
+                handleConfigChange({
+                  showOnlyWhenOnTrack: enabled,
+                })
+              }
             />
           </div>
 
           {/* Session Visibility Settings */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium text-slate-200">Session Visibility</h3>
+              <h3 className="text-lg font-medium text-slate-200">
+                Session Visibility
+              </h3>
             </div>
             <div className="space-y-3 pl-4">
               <SessionVisibility
@@ -257,4 +321,4 @@ export const MiniMapSettings = () => {
       )}
     </BaseSettingsSection>
   );
-}; 
+};

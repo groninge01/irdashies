@@ -15,7 +15,7 @@ const sampleDrivers: TrackDriver[] = [
       CarClassID: 2,
       CarClassColor: 16734344,
       CarClassEstLapTime: 126.9374,
-    },
+    } as unknown as TrackDriver['driver'],
     progress: 0.9262315034866333,
     isPlayer: true,
     classPosition: 1,
@@ -27,7 +27,7 @@ const sampleDrivers: TrackDriver[] = [
       CarClassID: 1,
       CarClassColor: 16767577,
       CarClassEstLapTime: 113.6302,
-    },
+    } as unknown as TrackDriver['driver'],
     progress: 0.936923086643219,
     isPlayer: false,
     classPosition: 3,
@@ -39,7 +39,7 @@ const sampleDrivers: TrackDriver[] = [
       CarClassID: 1,
       CarClassColor: 16767577,
       CarClassEstLapTime: 113.6302,
-    },
+    } as unknown as TrackDriver['driver'],
     progress: 0.06046311929821968,
     isPlayer: false,
     classPosition: 2,
@@ -51,14 +51,20 @@ const sampleDrivers: TrackDriver[] = [
       CarClassID: 3,
       CarClassColor: 11430911,
       CarClassEstLapTime: 126.2284,
-    },
+    } as unknown as TrackDriver['driver'],
     progress: 0.8526926636695862,
     isPlayer: false,
     classPosition: 4,
   },
 ];
 
-export default {
+type MiniMapStoryArgs = ComponentProps<typeof MiniMapCanvas> & {
+  playerSpeedKph?: number;
+  otherSpeedKph?: number;
+  tickMs?: number;
+};
+
+const meta = {
   component: MiniMapCanvas,
   title: 'widgets/TrackMap/components/MiniMapCanvas',
   args: {
@@ -71,15 +77,15 @@ export default {
     trackLineWidth: 20,
     trackOutlineWidth: 40,
     invertTrackColors: false,
-    forwardDistanceMeters: 250,
-    backwardDistanceMeters: 100,
-    lateralFovMeters: 140,
-    carAnchorY: 0.78,
+    forwardDistanceMeters: 170,
+    backwardDistanceMeters: 18,
+    lateralFovMeters: 130,
+    carAnchorY: 0.93,
     headingSampleDistanceMeters: 45,
     rotationSmoothing: 0.08,
     scaleSmoothing: 0.18,
     minHeadingDeltaDegrees: 1.0,
-    fovShape: 'circle',
+    tiltAmount: 0.9,
   },
   argTypes: {
     showCarNumbers: { control: { type: 'boolean' } },
@@ -126,40 +132,76 @@ export default {
       control: { type: 'range', min: 0, max: 5, step: 0.1 },
       description: 'Ignore tiny heading changes to reduce visible jitter.',
     },
-    fovShape: {
-      control: { type: 'inline-radio' },
-      options: ['circle', 'rectangle'],
+    tiltAmount: {
+      control: { type: 'range', min: 0, max: 0.92, step: 0.01 },
+      description:
+        'Pseudo-3D perspective tilt (higher = stronger drive-nav effect).',
     },
     highlightColor: {
       control: { type: 'number' },
       description: 'RGB number (e.g. amber is 16096779).',
     },
   },
-} as Meta<typeof MiniMapCanvas>;
+} satisfies Meta<MiniMapStoryArgs>;
 
-type Story = StoryObj<typeof MiniMapCanvas>;
+export default meta;
 
-const FovSizedPreview = (
-  args: ComponentProps<typeof MiniMapCanvas>,
-  children: ReactNode
-) => {
-  const lateral = Math.max(1, args.lateralFovMeters ?? 140);
+type Story = StoryObj<typeof meta>;
+
+const FovSizedPreview = (args: MiniMapStoryArgs, children: ReactNode) => {
+  const lateral = Math.max(1, args.lateralFovMeters ?? 130);
   const depth = Math.max(
     1,
-    (args.forwardDistanceMeters ?? 250) + (args.backwardDistanceMeters ?? 100)
+    (args.forwardDistanceMeters ?? 170) + (args.backwardDistanceMeters ?? 18)
   );
-  const isCircle = (args.fovShape ?? 'circle') === 'circle';
   const aspect = lateral / depth;
   const maxWidth = 560;
   const maxHeight = 420;
-  const widthFromHeight = isCircle ? maxHeight : Math.round(maxHeight * aspect);
+  const widthFromHeight = Math.round(maxHeight * aspect);
   const width = Math.max(220, Math.min(maxWidth, widthFromHeight));
-  const height = isCircle ? width : Math.max(180, Math.round(width / aspect));
+  const height = Math.max(180, Math.round(width / aspect));
+  const padding = 12;
+  const tilt = Math.min(0.92, Math.max(0, args.tiltAmount ?? 0.9));
+  const showTrapezoid = tilt > 0;
+  const topInset = padding + (width * (0.06 + tilt * 0.08)) / 2;
+  const bottomInset = padding;
+  const strokeColor = 'rgba(56, 189, 248, 0.95)';
+  const strokeWidth = 2;
 
   return (
     <div className="w-full flex items-center justify-center p-4 bg-gray-900">
-      <div style={{ width: `${width}px`, height: `${height}px` }}>
+      <div
+        style={{ width: `${width}px`, height: `${height}px` }}
+        className="relative"
+      >
         {children}
+        <svg
+          width={width}
+          height={height}
+          viewBox={`0 0 ${width} ${height}`}
+          className="absolute inset-0 pointer-events-none"
+        >
+          {showTrapezoid ? (
+            <polygon
+              points={`${topInset},${padding} ${width - topInset},${padding} ${width - bottomInset},${height - padding} ${bottomInset},${height - padding}`}
+              fill="none"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeDasharray="6 4"
+            />
+          ) : (
+            <rect
+              x={padding}
+              y={padding}
+              width={Math.max(1, width - padding * 2)}
+              height={Math.max(1, height - padding * 2)}
+              fill="none"
+              stroke={strokeColor}
+              strokeWidth={strokeWidth}
+              strokeDasharray="6 4"
+            />
+          )}
+        </svg>
       </div>
     </div>
   );
@@ -171,21 +213,36 @@ export const Primary: Story = {
 
 export const CirclingAround: Story = {
   argTypes: {
-    playerSpeedPerTick: {
-      control: { type: 'range', min: 0.0001, max: 0.005, step: 0.0001 },
-      description: 'Progress increment every 50ms for the player car.',
+    playerSpeedKph: {
+      control: { type: 'range', min: 20, max: 350, step: 1 },
+      description: 'Player speed in km/h (150 = 25 km in 10 min).',
     },
-    otherSpeedPerTick: {
-      control: { type: 'range', min: 0.0001, max: 0.005, step: 0.0001 },
-      description: 'Progress increment every 50ms for non-player cars.',
+    otherSpeedKph: {
+      control: { type: 'range', min: 20, max: 350, step: 1 },
+      description: 'Other cars speed in km/h.',
+    },
+    tickMs: {
+      control: { type: 'range', min: 16, max: 200, step: 1 },
+      description: 'Animation update interval in milliseconds.',
     },
   },
   render: (args) => {
     const [drivers, setDrivers] = useState<TrackDriver[]>(
       args.drivers ?? sampleDrivers
     );
-    const playerSpeedPerTick = args.playerSpeedPerTick ?? 0.0009;
-    const otherSpeedPerTick = args.otherSpeedPerTick ?? 0.0006;
+    const tickMs = Math.max(1, args.tickMs ?? 50);
+    const trackLengthMeters = Math.max(
+      1,
+      args.trackDrawing?.active?.totalLength ??
+        trackDrawing.active.totalLength ??
+        1
+    );
+    const playerSpeedMps = Math.max(0, args.playerSpeedKph ?? 150) / 3.6;
+    const otherSpeedMps = Math.max(0, args.otherSpeedKph ?? 145) / 3.6;
+    const playerSpeedPerTick =
+      (playerSpeedMps * tickMs) / 1000 / trackLengthMeters;
+    const otherSpeedPerTick =
+      (otherSpeedMps * tickMs) / 1000 / trackLengthMeters;
 
     useEffect(() => {
       const interval = setInterval(() => {
@@ -198,21 +255,23 @@ export const CirclingAround: Story = {
               1,
           }))
         );
-      }, 50);
+      }, tickMs);
 
       return () => clearInterval(interval);
-    }, [playerSpeedPerTick, otherSpeedPerTick]);
+    }, [playerSpeedPerTick, otherSpeedPerTick, tickMs]);
 
     return FovSizedPreview(args, <MiniMapCanvas {...args} drivers={drivers} />);
   },
   args: {
-    playerSpeedPerTick: 0.0009,
-    otherSpeedPerTick: 0.0006,
+    playerSpeedKph: 150,
+    otherSpeedKph: 145,
+    tickMs: 50,
     trackLineWidth: 30,
     trackOutlineWidth: 40,
-    forwardDistanceMeters: 150,
-    backwardDistanceMeters: 50,
-    lateralFovMeters: 100,
-    fovShape: 'circle',
+    forwardDistanceMeters: 170,
+    backwardDistanceMeters: 18,
+    lateralFovMeters: 130,
+    carAnchorY: 0.93,
+    tiltAmount: 0.9,
   },
 };

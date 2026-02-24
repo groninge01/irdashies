@@ -18,7 +18,7 @@ export interface MiniMapConfig {
   rotationSmoothing?: number;
   scaleSmoothing?: number;
   minHeadingDeltaDegrees?: number;
-  fovShape?: 'circle' | 'rectangle';
+  tiltAmount?: number;
 }
 
 export const MiniMap = (config?: MiniMapConfig) => {
@@ -34,7 +34,9 @@ export const MiniMap = (config?: MiniMapConfig) => {
     return <></>;
   }
 
-  const trackDrawing = trackId ? (tracks as unknown as TrackDrawing[])[trackId] : null;
+  const trackDrawing = trackId
+    ? (tracks as unknown as TrackDrawing[])[trackId]
+    : null;
 
   if (!trackId || !trackDrawing) {
     return debug ? (
@@ -51,7 +53,9 @@ export const MiniMap = (config?: MiniMapConfig) => {
       <MiniMapCanvas
         trackDrawing={trackDrawing}
         drivers={driversTrackData}
-        highlightColor={settings?.useHighlightColor ? highlightColor : undefined}
+        highlightColor={
+          settings?.useHighlightColor ? highlightColor : undefined
+        }
         showCarNumbers={settings?.showCarNumbers ?? true}
         displayMode={settings?.displayMode ?? 'carNumber'}
         driverCircleSize={settings?.driverCircleSize ?? 40}
@@ -59,15 +63,15 @@ export const MiniMap = (config?: MiniMapConfig) => {
         trackLineWidth={settings?.trackLineWidth ?? 20}
         trackOutlineWidth={settings?.trackOutlineWidth ?? 40}
         invertTrackColors={settings?.invertTrackColors ?? false}
-        forwardDistanceMeters={config?.forwardDistanceMeters ?? 250}
-        backwardDistanceMeters={config?.backwardDistanceMeters ?? 100}
-        lateralFovMeters={config?.lateralFovMeters ?? 140}
-        carAnchorY={config?.carAnchorY ?? 0.78}
+        forwardDistanceMeters={config?.forwardDistanceMeters ?? 170}
+        backwardDistanceMeters={config?.backwardDistanceMeters ?? 18}
+        lateralFovMeters={config?.lateralFovMeters ?? 130}
+        carAnchorY={config?.carAnchorY ?? 0.93}
         headingSampleDistanceMeters={config?.headingSampleDistanceMeters ?? 45}
         rotationSmoothing={config?.rotationSmoothing ?? 0.08}
         scaleSmoothing={config?.scaleSmoothing ?? 0.18}
         minHeadingDeltaDegrees={config?.minHeadingDeltaDegrees ?? 1.0}
-        fovShape={config?.fovShape ?? 'circle'}
+        tiltAmount={config?.tiltAmount ?? 0.9}
       />
     </div>
   );
